@@ -7,16 +7,23 @@ import io
 # App Title
 # -------------------------------
 st.title("🌶️ Chili Ripeness Detection")
-st.write("Capture an image using your camera and let the AI detect the ripeness of chili.")
+st.write("Capture or upload an image and let the AI detect the ripeness of chili.")
 
 # -------------------------------
-# Camera Input
+# Image Input Options
 # -------------------------------
-img_file = st.camera_input("Take a picture of your chili")
+st.subheader("Upload or Take a Picture")
+option = st.radio("Choose input method:", ("📂 Upload Image", "📸 Use Camera"))
+
+img_file = None
+if option == "📂 Upload Image":
+    img_file = st.file_uploader("Upload a chili photo", type=["jpg", "jpeg", "png"])
+elif option == "📸 Use Camera":
+    img_file = st.camera_input("Take a picture of your chili")
 
 if img_file is not None:
     # Display image
-    st.image(img_file, caption="Captured Image", use_container_width=True)
+    st.image(img_file, caption="Selected Image", use_container_width=True)
 
     # Convert image for sending to Roboflow API
     image = Image.open(img_file)
@@ -42,12 +49,12 @@ if img_file is not None:
         st.subheader("Prediction Results")
 
         if "predictions" in result and len(result["predictions"]) > 0:
-            # Get the highest-confidence prediction
+            # Get highest-confidence prediction
             best_pred = max(result["predictions"], key=lambda x: x["confidence"])
             label = best_pred["class"]
             confidence = best_pred["confidence"]
 
-            # ✅ Apply confidence threshold
+            # ✅ Confidence threshold
             if confidence > 0.8 and "chili" in label.lower():
                 st.success(f"✅ Detected Chili: {label} (Confidence: {confidence:.2f})")
             else:
