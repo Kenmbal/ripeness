@@ -42,19 +42,16 @@ if img_file is not None:
         st.subheader("Prediction Results")
 
         if "predictions" in result and len(result["predictions"]) > 0:
-            chili_detected = False
+            # Get the highest-confidence prediction
+            best_pred = max(result["predictions"], key=lambda x: x["confidence"])
+            label = best_pred["class"]
+            confidence = best_pred["confidence"]
 
-            for pred in result["predictions"]:
-                label = pred["class"]
-                confidence = pred["confidence"]
-
-                # ✅ Check if object is chili
-                if "chili" in label.lower():
-                    chili_detected = True
-                    st.success(f"✅ Detected Chili: {label} (Confidence: {confidence:.2f})")
-
-            if not chili_detected:
-                st.error("❌ Error: Object detected is not a chili. Please try again.")
+            # ✅ Apply confidence threshold
+            if confidence > 0.8 and "chili" in label.lower():
+                st.success(f"✅ Detected Chili: {label} (Confidence: {confidence:.2f})")
+            else:
+                st.error("❌ Not a chili (low confidence). Try again.")
         
         else:
             st.warning("⚠️ No object detected. Try again with clearer image.")
