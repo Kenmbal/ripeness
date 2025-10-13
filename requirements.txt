@@ -1,0 +1,9 @@
+# Core dependencies
+streamlit
+ultralytics
+opencv-python-headless
+Pillow
+
+# Optional: useful for image handling and performance
+numpy
+torch
