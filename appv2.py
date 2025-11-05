@@ -64,4 +64,4 @@ if img_file is not None:
                 cls = int(box.cls[0])
                 label = model.names[cls]
                 conf = float(box.conf[0])
-                st.write(f"✅ **{label}** ({conf:.2f} confidence)")
+                
